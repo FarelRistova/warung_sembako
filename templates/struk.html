@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Struk {{ trx.no_nota }}</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 24px 12px; background: #e9eee9;
+      font: 13px/1.45 "Plus Jakarta Sans", system-ui, sans-serif; color: #17281f;
+      font-variant-numeric: tabular-nums;
+    }
+    .kertas {
+      width: 302px; max-width: 100%; margin: 0 auto; padding: 18px 16px 20px;
+      background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12);
+    }
+    h1 { font-size: 16px; margin: 0; text-align: center; }
+    .alamat { text-align: center; margin: 2px 0 10px; color: #55665c; }
+    .garis { border: 0; border-top: 1px dashed #9aa89f; margin: 10px 0; }
+    .meta { display: flex; justify-content: space-between; color: #55665c; }
+    .item { margin: 6px 0; }
+    .item .nama { font-weight: 600; }
+    .item .rinci { display: flex; justify-content: space-between; color: #3d4f45; }
+    .jumlah { display: flex; justify-content: space-between; margin: 3px 0; }
+    .jumlah.besar { font-size: 15px; font-weight: 800; }
+    .terima-kasih { text-align: center; margin: 12px 0 0; color: #55665c; }
+    .aksi { width: 302px; max-width: 100%; margin: 14px auto 0; display: flex; gap: 8px; }
+    .aksi button, .aksi a {
+      flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #1d5b3f; text-align: center;
+      font: 600 13px inherit; text-decoration: none; cursor: pointer;
+    }
+    .aksi button { background: #1d5b3f; color: #fff; }
+    .aksi a { background: #fff; color: #1d5b3f; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .kertas { box-shadow: none; width: 100%; padding: 0; }
+      .aksi { display: none; }
+      @page { margin: 4mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="kertas">
+    <h1>{{ nama_warung }}</h1>
+    <p class="alamat">{{ alamat_warung }}</p>
+    <div class="meta"><span>{{ trx.no_nota }}</span><span>{{ trx.waktu | waktu }}</span></div>
+    <hr class="garis">
+
+    {% for i in item %}
+    <div class="item">
+      <div class="nama">{{ i.nama }}</div>
+      <div class="rinci">
+        <span>{{ i.qty | angka }} {{ i.satuan }} × {{ i.harga | rp }}</span>
+        <span>{{ i.subtotal | rp }}</span>
+      </div>
+    </div>
+    {% endfor %}
+
+    <hr class="garis">
+    <div class="jumlah besar"><span>Total</span><span>{{ trx.total | rp }}</span></div>
+    <div class="jumlah"><span>Bayar</span><span>{{ trx.bayar | rp }}</span></div>
+    <div class="jumlah"><span>Kembali</span><span>{{ trx.kembali | rp }}</span></div>
+    <hr class="garis">
+    <p class="terima-kasih">Terima kasih sudah berbelanja.<br>Barang yang sudah dibeli tidak dapat ditukar.</p>
+  </div>
+
+  <div class="aksi">
+    <a href="{{ url_for('halaman_kasir') }}">Kembali ke kasir</a>
+    <button type="button" onclick="window.print()">Cetak</button>
+  </div>
+
+  <script>
+    if (location.search.includes('print=1')) window.addEventListener('load', () => window.print());
+  </script>
+</body>
+</html>

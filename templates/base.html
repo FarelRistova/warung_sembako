@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Kasir{% endblock %} · {{ nama_warung }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('halaman_kasir') }}">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 4h10l8 8-9 9-9-9z" fill="currentColor"/>
+        <circle cx="8" cy="9" r="1.8" fill="#1d5b3f"/>
+      </svg>
+      <span>{{ nama_warung }}</span>
+    </a>
+    <nav class="nav" aria-label="Menu utama">
+      <a href="{{ url_for('halaman_kasir') }}" class="{{ 'aktif' if request.endpoint == 'halaman_kasir' }}">Kasir</a>
+      <a href="{{ url_for('halaman_produk') }}" class="{{ 'aktif' if request.endpoint == 'halaman_produk' }}">Barang</a>
+      <a href="{{ url_for('halaman_riwayat') }}" class="{{ 'aktif' if request.endpoint == 'halaman_riwayat' }}">Laporan</a>
+    </nav>
+    <time class="jam" id="jam"></time>
+  </header>
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Jam di header
+    (function () {
+      const el = document.getElementById('jam');
+      const tick = () => {
+        el.textContent = new Date().toLocaleString('id-ID', {
+          weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+        });
+      };
+      tick(); setInterval(tick, 20000);
+    })();
+
+    // Utilitas bersama
+    const rp = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+    const angka = n => (Math.round(n * 1000) / 1000).toLocaleString('id-ID');
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    let toastTimer;
+    function toast(pesan, jenis) {
+      const t = document.getElementById('toast');
+      t.textContent = pesan;
+      t.className = 'toast tampil ' + (jenis || '');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('tampil'), 3200);
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

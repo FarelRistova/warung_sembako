@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Laporan{% endblock %}
+
+{% block content %}
+<section class="halaman">
+  <div class="halaman-kepala">
+    <div>
+      <h1>Laporan penjualan</h1>
+      <p class="sub">Ringkasan transaksi per hari dan barang yang perlu dibeli lagi.</p>
+    </div>
+    <form method="get" class="filter-tanggal">
+      <label>Tanggal
+        <input type="date" name="tanggal" value="{{ tanggal }}" onchange="this.form.submit()">
+      </label>
+    </form>
+  </div>
+
+  <div class="ringkasan">
+    <div class="angka-besar">
+      <span>Omzet</span>
+      <strong>{{ ringkas.omzet | rp }}</strong>
+    </div>
+    <div class="angka-kecil">
+      <span>Transaksi</span>
+      <strong>{{ ringkas.jumlah }}</strong>
+    </div>
+    <div class="angka-kecil">
+      <span>Rata-rata per belanja</span>
+      <strong>{{ rata | rp }}</strong>
+    </div>
+  </div>
+
+  <div class="dua-kolom">
+    <div class="panel">
+      <h2>Transaksi</h2>
+      {% if daftar %}
+      <div class="tabel-bungkus">
+        <table class="tabel">
+          <thead>
+            <tr><th>Nota</th><th>Jam</th><th>Isi belanja</th><th class="kanan">Total</th><th class="aksi"></th></tr>
+          </thead>
+          <tbody>
+            {% for t in daftar %}
+            <tr>
+              <td><strong>{{ t.no_nota }}</strong></td>
+              <td>{{ t.waktu[11:16] }}</td>
+              <td class="isi">{{ t.isi }}</td>
+              <td class="kanan">{{ t.total | rp }}</td>
+              <td class="aksi"><a class="tombol-kecil" href="{{ url_for('halaman_struk', trx_id=t.id) }}" target="_blank" rel="noopener">Struk</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="kosong">Belum ada transaksi pada tanggal ini.</p>
+      {% endif %}
+    </div>
+
+    <div class="samping">
+      <div class="panel">
+        <h2>Paling laku</h2>
+        {% if terlaris %}
+        <ol class="daftar-laku">
+          {% for b in terlaris %}
+          <li>
+            <span>{{ b.nama }}<small>{{ b.qty | angka }} {{ b.satuan }}</small></span>
+            <strong>{{ b.nilai | rp }}</strong>
+          </li>
+          {% endfor %}
+        </ol>
+        {% else %}
+        <p class="kosong">Belum ada data.</p>
+        {% endif %}
+      </div>
+
+      <div class="panel">
+        <h2>Stok menipis</h2>
+        {% if menipis %}
+        <ul class="daftar-laku">
+          {% for p in menipis %}
+          <li>
+            <span>{{ p.nama }}<small>batas {{ p.stok_min | angka }} {{ p.satuan }}</small></span>
+            <strong class="stok {{ 'habis' if p.stok <= 0 else 'rendah' }}">{{ p.stok | angka }} {{ p.satuan }}</strong>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="kosong">Semua stok masih aman.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

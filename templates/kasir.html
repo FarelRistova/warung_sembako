@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Kasir{% endblock %}
+
+{% block content %}
+<section class="kasir">
+  <div class="katalog">
+    <div class="katalog-atas">
+      <label class="cari">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="cari" type="search" autocomplete="off" autofocus
+               placeholder="Cari barang, atau ketik kode lalu Enter" aria-label="Cari barang">
+        <kbd>/</kbd>
+      </label>
+      <div id="chips" class="chips" role="tablist" aria-label="Kategori"></div>
+    </div>
+    <div id="grid" class="grid" aria-live="polite"></div>
+  </div>
+
+  <aside class="struk" aria-label="Belanjaan">
+    <div class="struk-kepala">
+      <h2>Belanjaan</h2>
+      <button type="button" id="kosongkan" class="tombol-teks">Kosongkan</button>
+    </div>
+
+    <ul id="cart" class="cart"></ul>
+
+    <div class="struk-kaki">
+      <div class="baris-total">
+        <span>Total</span>
+        <strong id="total">Rp 0</strong>
+      </div>
+
+      <label class="isian-bayar">
+        <span>Uang dibayar</span>
+        <input id="bayar" inputmode="numeric" autocomplete="off" placeholder="0">
+      </label>
+      <div class="cepat" id="cepat">
+        <button type="button" data-nominal="pas">Uang pas</button>
+        <button type="button" data-nominal="20000">20rb</button>
+        <button type="button" data-nominal="50000">50rb</button>
+        <button type="button" data-nominal="100000">100rb</button>
+      </div>
+
+      <div class="baris-kembali" id="baris-kembali">
+        <span id="label-kembali">Kembalian</span>
+        <strong id="kembali">Rp 0</strong>
+      </div>
+
+      <button type="button" id="proses" class="tombol-bayar" disabled>Bayar</button>
+    </div>
+  </aside>
+</section>
+
+<dialog id="sukses" class="dialog">
+  <div class="sukses-isi">
+    <svg class="centang" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+    <h2>Transaksi berhasil</h2>
+    <p class="nota" id="sukses-nota"></p>
+    <div class="sukses-kembali">
+      <span>Kembalian</span>
+      <strong id="sukses-kembali"></strong>
+    </div>
+    <div class="dialog-aksi">
+      <a id="sukses-cetak" class="tombol sekunder" href="#" target="_blank" rel="noopener">Cetak struk</a>
+      <button type="button" id="sukses-tutup" class="tombol utama">Transaksi baru</button>
+    </div>
+  </div>
+</dialog>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='kasir.js') }}"></script>
+{% endblock %}

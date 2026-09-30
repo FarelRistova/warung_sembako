@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Barang{% endblock %}
+
+{% block content %}
+<section class="halaman">
+  <div class="halaman-kepala">
+    <div>
+      <h1>Barang</h1>
+      <p class="sub" id="ringkas-barang">Memuat data…</p>
+    </div>
+    <button type="button" id="tambah" class="tombol utama">Tambah barang</button>
+  </div>
+
+  <label class="cari lebar">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="cari-barang" type="search" placeholder="Cari nama, kode, atau kategori" autocomplete="off" aria-label="Cari barang">
+  </label>
+
+  <div class="tabel-bungkus">
+    <table class="tabel">
+      <thead>
+        <tr>
+          <th>Barang</th>
+          <th>Kategori</th>
+          <th class="kanan">Harga</th>
+          <th class="kanan">Stok</th>
+          <th class="aksi"></th>
+        </tr>
+      </thead>
+      <tbody id="isi-tabel"></tbody>
+    </table>
+  </div>
+</section>
+
+<dialog id="form-dialog" class="dialog">
+  <form id="form" method="dialog" class="form">
+    <h2 id="form-judul">Tambah barang</h2>
+
+    <label>Nama barang
+      <input name="nama" required maxlength="80" placeholder="Contoh: Beras Premium 5 kg">
+    </label>
+
+    <div class="dua">
+      <label>Kategori
+        <input name="kategori" list="daftar-kategori" placeholder="Beras, Minyak, Mie…">
+        <datalist id="daftar-kategori"></datalist>
+      </label>
+      <label>Kode / barcode <small>(boleh kosong)</small>
+        <input name="kode" maxlength="40">
+      </label>
+    </div>
+
+    <div class="dua">
+      <label>Harga jual (Rp)
+        <input name="harga" type="number" min="0" step="100" required inputmode="numeric">
+      </label>
+      <label>Satuan
+        <input name="satuan" list="daftar-satuan" placeholder="kg, pcs, botol…" required>
+        <datalist id="daftar-satuan">
+          <option>kg</option><option>gram</option><option>liter</option><option>pcs</option>
+          <option>bungkus</option><option>botol</option><option>kaleng</option>
+          <option>karung</option><option>renceng</option><option>kotak</option>
+        </datalist>
+      </label>
+    </div>
+
+    <div class="dua">
+      <label>Stok saat ini
+        <input name="stok" type="number" min="0" step="any" required inputmode="decimal">
+      </label>
+      <label>Ingatkan jika stok ≤
+        <input name="stok_min" type="number" min="0" step="any" value="5" inputmode="decimal">
+      </label>
+    </div>
+
+    <p class="galat-form" id="galat-form" role="alert"></p>
+
+    <div class="dialog-aksi">
+      <button type="button" id="batal" class="tombol sekunder">Batal</button>
+      <button type="submit" class="tombol utama" id="simpan">Simpan</button>
+    </div>
+  </form>
+</dialog>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='produk.js') }}"></script>
+{% endblock %}
